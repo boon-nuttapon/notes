@@ -56,6 +56,19 @@ describe('Tests for domain Note', () => {
                     updatedAt: _.isDate,
                 });
             });
+
+	    it('should ignore updating the subject of the note', async() => {
+	        await domainNote.update({
+		    subject: 'new subject'
+		});
+
+	        domainNote.expose().should.match({
+		    id: noteId,
+		    subject: 'some subject',
+		    body: 'some body',
+		    updatedAt: _.isDate,
+		});
+	    });
         });
 
         describe('delete', () => {
