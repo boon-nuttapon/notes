@@ -2,6 +2,8 @@
 
 const _ = require('lodash');
 
+const validator = require('./validator/note')
+
 class Note {
     constructor(note) {
         this._note = note;
@@ -21,7 +23,9 @@ class Note {
     }
 
     async update(note) {
-        await this._note.update(note);
+        if(validator.validateNoteUpdateParams(note)) {
+	    await this._note.update(note);
+	}
     }
 
     async delete() {
