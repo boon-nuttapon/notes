@@ -7,15 +7,19 @@ const sequelize = new Sequelize(config.postgresql.url, {
 });
 
 const User = require('./user');
+const Notebook = require('./notebook');
 const Note = require('./note');
-const userNoteAssociation = require('./userNote');
+const userNotebookAssociation = require('./userNotebook');
+const notebookNoteAssociation = require('./notebookNote')
 
 const models = {
     sequelize,
     User: User.define(sequelize),
+    Notebook: Notebook.define(sequelize),
     Note: Note.define(sequelize),
 };
 
-userNoteAssociation.define(models);
+userNotebookAssociation.define(models);
+notebookNoteAssociation.define(models);
 
 module.exports = models;

@@ -10,13 +10,6 @@ module.exports.define = sequelize => {
             primaryKey: true,
             autoIncrement: true
         },
-        subject: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true
-            }
-        },
         body: {
             type: Sequelize.TEXT,
             allowNull: false,
@@ -24,12 +17,19 @@ module.exports.define = sequelize => {
                 notEmpty: true
             }
         },
+	version: {
+	    type: Sequelize.INTEGER,
+	    allowNull: false,
+	    validate: {
+                notEmpty: true
+	    }
+	},
     }, {
         indexes: [
             {
-                name: 'Notes_user_id',
+                name: 'Notes_notebook_id',
                 unique: true,
-                fields: ['userId', 'id']
+                fields: ['notebookId', 'id', 'version']
             },
         ],
     });

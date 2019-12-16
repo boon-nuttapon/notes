@@ -1,12 +1,12 @@
 'use strict';
 
 module.exports.define = models => {
-    models.User.hasMany(models.Note, {
+    models.User.hasMany(models.Notebook, {
         foreignKey: {
             name: 'userId',
             allowNull: false
         },
-        as: 'notes',
+        as: 'notebooks',
         onUpdate: 'RESTRICT',
         onDelete: 'CASCADE'
     });
