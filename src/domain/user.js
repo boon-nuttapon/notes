@@ -26,30 +26,30 @@ class User {
         }
     }
 
-    async notes() {
-        const notes = await this._user.getNotes({
+    async notebooks() {
+        const notebooks = await this._user.getNotebooks({
             order: [
                 ['updatedAt', 'DESC']
             ],
         });
-        return _.map(notes, note => new domain.Note(note));
+        return _.map(notebooks, notebook => new domain.Notebook(notebook));
     }
 
-    async note(id) {
-        const notes = await this._user.getNotes({
+    async notebook(id) {
+        const notebooks = await this._user.getNotebooks({
             where: {
                 id
             },
         });
-        if (_.size(notes) !== 1) {
-            throw new domain.Error(domain.Error.Code.NOTE_NOT_FOUND);
+        if (_.size(notebooks) !== 1) {
+            throw new domain.Error(domain.Error.Code.NOTEBOOK_NOT_FOUND);
         }
-        return new domain.Note(_.head(notes));
+        return new domain.Notebook(_.head(notebooks));
     }
 
-    async createNote(note) {
-        const createdNote = await this._user.createNote(note);
-        return new domain.Note(createdNote);
+    async createNotebook(note) {
+        const createdNotebook = await this._user.createNotebook(note);
+        return new domain.Notebook(createdNotebook);
     }
 
     static async getById(id) {

@@ -14,14 +14,14 @@ class Note {
     expose() {
         return _.pick(this._note, [
             'id',
-            'subject',
             'body',
+	    'version',
             'updatedAt',
         ]);
     }
 
-    async update(note) {
-        await this._note.update(note);
+    version() {
+    	return this._note.version;
     }
 
     async delete() {

@@ -8,6 +8,7 @@ const model = require('../../src/model');
 describe('Tests for domain Note', () => {
     let noteId;
     let modelUser;
+    let domainNotebook;
     let domainNote;
 
     beforeEach(async () => {
@@ -17,53 +18,49 @@ describe('Tests for domain Note', () => {
 
         modelUser = await model.User.createUser('user1', 'password1');
 
-        const note = await modelUser.createNote({
+        const notebook = await modelUser.createNotebook({
             subject: 'some subject',
             body: 'some body',
         });
-        noteId = note.id;
-        domainNote = new domain.Note(note);
+        domainNotebook = new domain.Notebook(notebook);
+
+	await domainNotebook.updateLastVersion();
+
+	await domainNotebook.updateNote({
+		body: 'new body'
+	});
+	
+	await domainNotebook.updateLastVersion();
+
+	domainNote = await domainNotebook.updateNote({
+		body: 'newer body'
+	});
     });
 
     describe('instance method', () => {
         describe('getters', () => {
             it('should get the id', () => {
-                domainNote.id.should.equal(noteId);
+                domainNote.id.should.equal(2);
             });
         });
 
         describe('expose', () => {
-            it('should expose the id, subject, body and updatedAt of the note', () => {
+            it('should expose the id, body, version and updatedAt of the note', () => {
                 domainNote.expose().should.match({
-                    id: noteId,
-                    subject: 'some subject',
-                    body: 'some body',
+                    id: 2,
+                    body: 'newer body',
+                    version: 2,
                     updatedAt: _.isDate,
                 });
             });
         });
 
-        describe('update', () => {
-            it('should update the body of the note', async () => {
-                await domainNote.update({
-                    body: 'new body'
-                });
-
-                domainNote.expose().should.match({
-                    id: noteId,
-                    subject: 'some subject',
-                    body: 'new body',
-                    updatedAt: _.isDate,
-                });
-            });
-        });
-
-        describe('delete', () => {
+        /*describe('delete', () => {
             it('should delete the note', async () => {
                 await domainNote.delete();
 
-                (await modelUser.getNotes()).should.be.empty();
+                (await domainNotebook.notes()).should.be.empty();
             });
-        });
+        });*/
     });
 });

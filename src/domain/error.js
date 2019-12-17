@@ -20,6 +20,7 @@ DomainError.Code = _.extend(_.transform([
     };
 }), _.transform([
     'USER_NOT_FOUND',
+    'NOTEBOOK_NOT_FOUND',
     'NOTE_NOT_FOUND',
 ], (result, code) => {
     result[code] = {

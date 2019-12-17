@@ -23,7 +23,7 @@ describe('Tests for domain User', () => {
                 const notes = await Promise.all(_.map(_.times(5, n => ({
                     subject: `subject ${ n }`,
                     body: `body ${ n }`,
-                })), note => user.createNote(note)));
+                })), note => user.createNotebook(note)));
                 noteId1 = _.first(notes).id;
             })(),
             (async () => {
@@ -90,40 +90,40 @@ describe('Tests for domain User', () => {
             });
         });
 
-        describe('notes', () => {
-            it('should return the Notes asociated with the User', async () => {
-                const notes = await domainUser1.notes();
+        describe('notebooks', () => {
+            it('should return the Notebooks asociated with the User', async () => {
+                const notebooks = await domainUser1.notebooks();
 
-                notes.should.have.size(5);
-                _.each(notes, note => {
-                    note.should.be.instanceOf(domain.Note);
+                notebooks.should.have.size(5);
+                _.each(notebooks, notebook => {
+                    notebook.should.be.instanceOf(domain.Notebook);
                 });
             });
 
             it('should return an empty array if no Notes', async () => {
-                (await domainUser2.notes()).should.be.empty();
+                (await domainUser2.notebooks()).should.be.empty();
             });
         });
 
-        describe('note', () => {
-            it('should return a note by its id', async () => {
-                const note = await domainUser1.note(noteId1);
-                note.should.be.instanceOf(domain.Note);
+        describe('notebook', () => {
+            it('should return a notebook by its id', async () => {
+                const notebook = await domainUser1.notebook(noteId1);
+                notebook.should.be.instanceOf(domain.Notebook);
             });
 
-            it('should reject NOTE_NOT_FOUND if wrong id', async () => {
-                await domainUser2.note(noteId1).should.be.rejectedWith(domain.Error.Code.NOTE_NOT_FOUND.name);
+            it('should reject NOTEBOOK_NOT_FOUND if wrong id', async () => {
+                await domainUser2.notebook(noteId1).should.be.rejectedWith(domain.Error.Code.NOTEBOOK_NOT_FOUND.name);
             });
         });
 
-        describe('createNote', () => {
-            it('should create a new note associated to the user', async () => {
-                const createdNote = await domainUser1.createNote({
+        describe('createNotebook', () => {
+            it('should create a new notebook associated to the user', async () => {
+                const createdNotebook = await domainUser1.createNotebook({
                     subject: 'new subject',
                     body: 'new body'
                 });
 
-                await domainUser1.note(createdNote.id).should.be.fulfilled();
+                await domainUser1.notebook(createdNotebook.id).should.be.fulfilled();
             });
         });
     });
