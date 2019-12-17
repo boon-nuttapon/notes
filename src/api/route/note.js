@@ -3,25 +3,33 @@
 const _ = require('lodash');
 
 module.exports.create = async (req, res) => {
-    const note = await req.currentUser.createNote(req.body);
-    res.json(note.expose());
+    const notebook = await req.currentUser.createNotebook(req.body);
+    await notebook.updateLastVersion();
+    await notebook.updateNote(req.body);
+    res.json(notebook.expose());
 };
 
 module.exports.list = async (req, res) => {
-    const notes = await req.currentUser.notes();
-    res.json(_.invokeMap(notes, 'expose'));
+    const notebooks = await req.currentUser.notebooks();
+    res.json(_.invokeMap(notebooks, 'expose'));
 };
 
 module.exports.get = async (req, res) => {
-    res.json(req.note.expose());
+    const notebookDetails = req.notebook.expose();
+    const notes = req.notebook.notes();
+    _.each(notes, note => {
+    	notebookDetails.note[note.version()] = note.expose();
+    });
+    res.json(notebookDetails);
 };
 
 module.exports.update = async (req, res) => {
-    await req.note.update(req.body);
-    res.json(req.note.expose());
+    await req.notebook.updateLastVersion();
+    await req.notebook.updateNote(req.body);
+    res.json(req.notebook.expose());
 };
 
 module.exports.delete = async (req, res) => {
-    await req.note.delete();
+    await req.notebook.delete();
     res.sendStatus(204);
 };
